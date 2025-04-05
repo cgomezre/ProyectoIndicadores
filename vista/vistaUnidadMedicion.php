@@ -6,6 +6,7 @@ ob_start();
 	include '../controlador/ControlEntidad.php';
 	include '../controlador/ControlConexionPdo.php';
 	include '../modelo/Entidad.php';
+  include '../controlador/ControlUnidadMedicion.php';
   	session_start();
   	if($_SESSION['email']==null)header('Location: ../index.php');
 
@@ -17,37 +18,7 @@ ob_start();
 	if(!$permisoParaEntrar)header('Location: ../vista/menu.php');
 
 ?>
-<?php
 
-$objControl = new ControlEntidad('unidadmedicion');
-$arreglounidadmedicion = $objControl->listar();
-
-$accion = $_POST['accion'] ?? '';
-$id = $_POST['id'] ?? '';
-$descripcion = $_POST['descripcion'] ?? '';
-
-switch ($accion) {
-    case 'guardar':
-        $datos = ['id' => $id, 'descripcion' => $descripcion];
-        $obj = new Entidad($datos);
-        $objControl->guardar($obj);
-        break;
-    case 'modificar':
-        $datos = ['id' => $id, 'descripcion' => $descripcion];
-        $obj = new Entidad($datos);
-        $objControl->modificar('id', $id, $obj);
-        break;
-    case 'borrar':
-        $objControl->borrar('id', $id);
-        break;
-    case 'consultar':
-        $obj = $objControl->buscarPorId('id', $id);
-        $nombre = $obj->__get('descripcion');
-        break;
-}
-$arreglo = $objControl->listar();
-
-?>
 <?php include "../vista/base_ini_head.html" ?>
 <?php include "../vista/base_ini_body.html" ?>
 
