@@ -9,6 +9,7 @@
   body {background-color: white;}
 </style>
 <div class="container">
-  <img src="../vista/img/pantalla.jpg" class="rounded" alt="pantalla" width="100%" height="500" style="margin-top: 30px;">
+  <img src="../vista/img/pantalla2.jpg" class="rounded" alt="pantalla2" width="100%" height="500" style="margin-top: 30px;">
+  <img src="../vista/img/ITMICON.png" class="rounded" alt="ITMICON" width="30%" height="100%" style="margin: 30px auto 0 auto; display: block;">
 </div>
 <?php include "../vista/basePie.html" ?>
