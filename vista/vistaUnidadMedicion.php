@@ -20,7 +20,7 @@ ob_start();
 <?php
 
 $objControl = new ControlEntidad('unidadmedicion');
-$arregloTipoIndicador = $objControl->listar();
+$arreglounidadmedicion = $objControl->listar();
 
 $accion = $_POST['accion'] ?? '';
 $id = $_POST['id'] ?? '';

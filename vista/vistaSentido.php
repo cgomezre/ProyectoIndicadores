@@ -20,7 +20,7 @@ ob_start();
 <?php
 
 $objControl = new ControlEntidad('sentido');
-$arregloTipoIndicador = $objControl->listar();
+$arreglosentido = $objControl->listar();
 
 $accion = $_POST['accion'] ?? '';
 $id = $_POST['id'] ?? '';
