@@ -19,21 +19,21 @@ ob_start();
 ?>
 <?php
 
-$objControl = new ControlEntidad('tipoindicador');
+$objControl = new ControlEntidad('unidadmedicion');
 $arregloTipoIndicador = $objControl->listar();
 
 $accion = $_POST['accion'] ?? '';
 $id = $_POST['id'] ?? '';
-$nombre = $_POST['nombre'] ?? '';
+$descripcion = $_POST['descripcion'] ?? '';
 
 switch ($accion) {
     case 'guardar':
-        $datos = ['id' => $id, 'nombre' => $nombre];
+        $datos = ['id' => $id, 'descripcion' => $descripcion];
         $obj = new Entidad($datos);
         $objControl->guardar($obj);
         break;
     case 'modificar':
-        $datos = ['id' => $id, 'nombre' => $nombre];
+        $datos = ['id' => $id, 'descripcion' => $descripcion];
         $obj = new Entidad($datos);
         $objControl->modificar('id', $id, $obj);
         break;
@@ -42,7 +42,7 @@ switch ($accion) {
         break;
     case 'consultar':
         $obj = $objControl->buscarPorId('id', $id);
-        $nombre = $obj->__get('nombre');
+        $nombre = $obj->__get('descripcion');
         break;
 }
 $arreglo = $objControl->listar();
@@ -59,10 +59,10 @@ $arreglo = $objControl->listar();
   <div class="table-wrapper">
     <div class="table-title">
       <div class="row">
-        <div class="col-sm-8" style="color:black"><h2>Tipo indicador</h2></div>
+        <div class="col-sm-8" style="color:black"><h2>Unidad Medicion</h2></div>
         <div class="col-sm-4 text-right">
             <button class="btn btn-primary" data-toggle="modal" data-target="#modalAgregar">
-            <i class="fa fa-plus"></i> Nuevo Tipo indicador</button>
+            <i class="fa fa-plus"></i> Nuevo Unidad Medicion</button>
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@ $arreglo = $objControl->listar();
       <thead class="thead-light">
         <tr>
           <th>Id</th>
-          <th>Nombre</th>
+          <th>Descripcion</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -78,7 +78,7 @@ $arreglo = $objControl->listar();
        <?php foreach ($arreglo as $obj): ?>
         <tr>
           <td><?= $obj->__get('id') ?></td>
-          <td><?= $obj->__get('nombre') ?></td>
+          <td><?= $obj->__get('descripcion') ?></td>
           <td>
             <form method="post" action="" style="display:inline;">
               <input type="hidden" name="id" value="<?= $obj->__get('id') ?>">
@@ -98,13 +98,14 @@ $arreglo = $objControl->listar();
   </div>
 </div>
 
+
 <!-- Modal: Agregar -->
 <div class="modal fade" id="modalAgregar" tabindex="-1" role="dialog" aria-labelledby="modalAgregarLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <form method="POST" action="">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"><?= $accion == 'consultar' ? 'Modificar' : 'Nuevo' ?> Tipo indicador</h5>
+          <h5 class="modal-title"><?= $accion == 'consultar' ? 'Modificar' : 'Nuevo' ?> Unidad Medicion</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -115,8 +116,8 @@ $arreglo = $objControl->listar();
             <input type="number" name="id" class="form-control" value="<?= $id ?>" <?= $accion == 'consultar' ? 'readonly' : '' ?> required>
           </div>
           <div class="form-group">
-            <label>Nombre</label>
-            <input type="text" name="nombre" class="form-control" value="<?= $nombre ?>" required>
+            <label>Descripcion</label>
+            <input type="text" name="descripcion" class="form-control" value="<?= $descripcion ?>" required>
           </div>
         </div>
         <div class="modal-footer">
