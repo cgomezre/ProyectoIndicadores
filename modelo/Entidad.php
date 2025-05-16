@@ -6,15 +6,15 @@ class Entidad {
         $this->propiedades = $params;
     }
 
-    public function __set($nombre, $valor) {
-        $this->propiedades[$nombre] = $valor;
+    public function __set($nombrecolumna, $valor) {
+        $this->propiedades[$nombrecolumna] = $valor;
     }
 
-    public function __get($nombre) {
-        if (array_key_exists($nombre, $this->propiedades)) {
-            return $this->propiedades[$nombre];
+    public function __get($nombrecolumna) {
+        if (array_key_exists($nombrecolumna, $this->propiedades)) {
+            return $this->propiedades[$nombrecolumna];
         }
-        trigger_error("Propiedad no definida: " . $nombre, E_USER_NOTICE);
+        trigger_error("Propiedad no definida: " . $nombrecolumna, E_USER_NOTICE);
         return null;
     }
 

@@ -5,7 +5,7 @@ ob_start();
 	include '../controlador/configBd.php';
 	include '../controlador/ControlEntidad.php';
 	include '../controlador/ControlConexionPdo.php';
-  include '../modelo/Entidad.php';
+	include '../modelo/Entidad.php';
 
   	session_start();
   	if($_SESSION['email']==null)header('Location: ../index.php');
@@ -19,15 +19,16 @@ ob_start();
 
 
 
-
 // Configurar nombre de la tabla y clave primaria
-$tabla = 'fuente';
+$tabla = 'variable';
 $clave = 'id';
 
 // Inicializar valores
 $accion = $_POST['accion'] ?? '';
 $id = $_POST['id'] ?? '';
 $nombre = $_POST['nombre'] ?? '';
+$fechacreacion = $_POST['fechacreacion'] ?? '';
+$fkemailusuario = $_POST['fkemailusuario'] ?? '';
 
 $control = new ControlEntidad($tabla);
 
@@ -47,7 +48,7 @@ if ($accion) {
       $obj = $control->buscarPorId($clave, $id);
       if ($obj) {
           $id = $obj->__get('id');
-          $nombre = $obj->__get('nombre');
+          //$nombre = $obj->__get('nombre');
       }
   }
 }
@@ -68,10 +69,10 @@ $arreglo = $control->listar();
   <div class="table-wrapper">
     <div class="table-title">
       <div class="row">
-        <div class="col-sm-8" style="color:black"><h2>Fuente</h2></div>
+        <div class="col-sm-8" style="color:black"><h2>Variable</h2></div>
         <div class="col-sm-4 text-right">
             <button class="btn btn-primary" data-toggle="modal" data-target="#modalAgregar">
-            <i class="fa fa-plus"></i> Nueva Fuente</button>
+            <i class="fa fa-plus"></i> Nueva Variable</button>
         </div>
       </div>
     </div>
@@ -79,7 +80,9 @@ $arreglo = $control->listar();
       <thead class="thead-light">
         <tr>
           <th>Id</th>
-          <th>Nombre Fuente</th>
+          <th>Nombre</th>
+          <th>Fecha Creacion</th>
+          <th>Email Usuario</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -88,8 +91,10 @@ $arreglo = $control->listar();
         <tr>
           <td><?= $obj->__get('id') ?></td>
           <td><?= $obj->__get('nombre') ?></td>
+          <td><?= $obj->__get('fechacreacion') ?></td>
+          <td><?= $obj->__get('fkemailusuario') ?></td>
           <td>
-            <form method="post" action="vistaFuente.php" style="display:inline;">
+            <form method="post" action="vistaVariable.php" style="display:inline;">
               <input type="hidden" name="id" value="<?= $obj->__get('id') ?>">
               <input type="hidden" name="accion" value="consultar">
               <button type="submit" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
@@ -110,10 +115,10 @@ $arreglo = $control->listar();
 <!-- Modal: Agregar -->
 <div class="modal fade" id="modalAgregar" tabindex="-1" role="dialog" aria-labelledby="modalAgregarLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form method="POST" action="vistaFuente.php">
+    <form method="POST" action="vistaVariable.php">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"><?= $accion == 'consultar' ? 'Modificar' : 'Nuevo' ?> Fuente</h5>
+          <h5 class="modal-title"><?= $accion == 'consultar' ? 'Modificar' : 'Nuevo' ?> Variable</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -124,8 +129,16 @@ $arreglo = $control->listar();
             <input type="number" name="id" class="form-control" value="<?= $id ?>" <?= $accion == 'consultar' ? 'readonly' : '' ?> required>
           </div>
           <div class="form-group">
-            <label>Nombre Fuente</label>
+            <label>Nombre</label>
             <input type="text" name="nombre" class="form-control" value="<?= $nombre ?>" required>
+          </div>
+          <div class="form-group">
+            <label>Fecha Creacion</label>
+            <input type="datetime-local" name="fechacreacion" class="form-control" value="<?= $fechacreacion ?>" required>
+          </div>
+          <div class="form-group">
+            <label>Email Usuario</label>
+            <input type="text" name="fkemailusuario" class="form-control" value="<?= $fkemailusuario ?>" required>
           </div>
         </div>
         <div class="modal-footer">

@@ -6,7 +6,7 @@ ob_start();
 	include '../controlador/ControlEntidad.php';
 	include '../controlador/ControlConexionPdo.php';
 	include '../modelo/Entidad.php';
-  include '../controlador/ControlUnidadMedicion.php';
+
   	session_start();
   	if($_SESSION['email']==null)header('Location: ../index.php');
 
@@ -16,6 +16,44 @@ ob_start();
 		if($listaRolesDelUsuario[$i]->__get('nombre')=="admin")$permisoParaEntrar=true;
 	}
 	if(!$permisoParaEntrar)header('Location: ../vista/menu.php');
+
+
+
+
+// Configurar nombre de la tabla y clave primaria
+$tabla = 'unidadmedicion';
+$clave = 'id';
+
+// Inicializar valores
+$accion = $_POST['accion'] ?? '';
+$id = $_POST['id'] ?? '';
+$descripcion = $_POST['descripcion'] ?? '';
+
+$control = new ControlEntidad($tabla);
+
+// Ejecutar acción si corresponde
+if ($accion) {
+  $datos = $_POST;
+  unset($datos['accion']); // quitar datos que no son campos
+  $entidad = new Entidad($datos);
+
+  if ($accion === 'guardar') {
+      $control->guardar($entidad);
+  } elseif ($accion === 'modificar') {
+      $control->modificar($clave, $id, $entidad);
+  } elseif ($accion === 'borrar') {
+      $control->borrar($clave, $id);
+  } elseif ($accion === 'consultar') {
+      $obj = $control->buscarPorId($clave, $id);
+      if ($obj) {
+          $id = $obj->__get('id');
+          $descripcion = $obj->__get('descripcion');
+      }
+  }
+}
+
+// Obtener todos los registros
+$arreglo = $control->listar();
 
 ?>
 
@@ -51,7 +89,7 @@ ob_start();
           <td><?= $obj->__get('id') ?></td>
           <td><?= $obj->__get('descripcion') ?></td>
           <td>
-            <form method="post" action="" style="display:inline;">
+            <form method="post" action="vistaUnidadMedicion.php" style="display:inline;">
               <input type="hidden" name="id" value="<?= $obj->__get('id') ?>">
               <input type="hidden" name="accion" value="consultar">
               <button type="submit" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
@@ -73,7 +111,7 @@ ob_start();
 <!-- Modal: Agregar -->
 <div class="modal fade" id="modalAgregar" tabindex="-1" role="dialog" aria-labelledby="modalAgregarLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form method="POST" action="">
+    <form method="POST" action="vistaUnidadMedicion.php">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title"><?= $accion == 'consultar' ? 'Modificar' : 'Nuevo' ?> Unidad Medicion</h5>

@@ -5,7 +5,7 @@ ob_start();
 	include '../controlador/configBd.php';
 	include '../controlador/ControlEntidad.php';
 	include '../controlador/ControlConexionPdo.php';
-  include '../modelo/Entidad.php';
+	include '../modelo/Entidad.php';
 
   	session_start();
   	if($_SESSION['email']==null)header('Location: ../index.php');
@@ -21,13 +21,14 @@ ob_start();
 
 
 // Configurar nombre de la tabla y clave primaria
-$tabla = 'fuente';
-$clave = 'id';
+$tabla = 'fuentesporindicador';
+$clave = 'fkidfuente';
 
 // Inicializar valores
 $accion = $_POST['accion'] ?? '';
-$id = $_POST['id'] ?? '';
-$nombre = $_POST['nombre'] ?? '';
+$fkidfuente = $_POST['fkidfuente'] ?? '';
+$fkindicador = $_POST['fkindicador'] ?? '';
+
 
 $control = new ControlEntidad($tabla);
 
@@ -40,14 +41,14 @@ if ($accion) {
   if ($accion === 'guardar') {
       $control->guardar($entidad);
   } elseif ($accion === 'modificar') {
-      $control->modificar($clave, $id, $entidad);
+      $control->modificar($clave, $fkidfuente, $entidad);
   } elseif ($accion === 'borrar') {
-      $control->borrar($clave, $id);
+      $control->borrar($clave, $fkidfuente);
   } elseif ($accion === 'consultar') {
-      $obj = $control->buscarPorId($clave, $id);
+      $obj = $control->buscarPorfkidfuente($clave, $fkidfuente);
       if ($obj) {
-          $id = $obj->__get('id');
-          $nombre = $obj->__get('nombre');
+          $fkidfuente = $obj->__get('fkidfuente');
+          //$nombre = $obj->__get('nombre');
       }
   }
 }
@@ -68,34 +69,35 @@ $arreglo = $control->listar();
   <div class="table-wrapper">
     <div class="table-title">
       <div class="row">
-        <div class="col-sm-8" style="color:black"><h2>Fuente</h2></div>
+        <div class="col-sm-8" style="color:black"><h2>Fuente por indicador</h2></div>
         <div class="col-sm-4 text-right">
             <button class="btn btn-primary" data-toggle="modal" data-target="#modalAgregar">
-            <i class="fa fa-plus"></i> Nueva Fuente</button>
+            <i class="fa fa-plus"></i> Nueva Fuente por indicador</button>
         </div>
       </div>
     </div>
     <table class="table table-bordered">
       <thead class="thead-light">
         <tr>
-          <th>Id</th>
-          <th>Nombre Fuente</th>
+          <th>Id Fuente</th>
+          <th>Id Indicador</th>          
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
        <?php foreach ($arreglo as $obj): ?>
         <tr>
-          <td><?= $obj->__get('id') ?></td>
-          <td><?= $obj->__get('nombre') ?></td>
+          <td><?= $obj->__get('fkidfuente') ?></td>
+          <td><?= $obj->__get('fkidindicador') ?></td>
+          
           <td>
-            <form method="post" action="vistaFuente.php" style="display:inline;">
-              <input type="hidden" name="id" value="<?= $obj->__get('id') ?>">
+            <form method="post" action="vistaFuentesXIndicador.php" style="display:inline;">
+              <input type="hidden" name="fkidfuente" value="<?= $obj->__get('fkidfuente') ?>">
               <input type="hidden" name="accion" value="consultar">
               <button type="submit" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
             </form>
             <form method="post" action="" style="display:inline;">
-              <input type="hidden" name="id" value="<?= $obj->__get('id') ?>">
+              <input type="hidden" name="fkidfuente" value="<?= $obj->__get('fkidfuente') ?>">
               <input type="hidden" name="accion" value="borrar">
               <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash" style="color:black"></i></button>
             </form>
@@ -110,23 +112,25 @@ $arreglo = $control->listar();
 <!-- Modal: Agregar -->
 <div class="modal fade" id="modalAgregar" tabindex="-1" role="dialog" aria-labelledby="modalAgregarLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form method="POST" action="vistaFuente.php">
+    <form method="POST" action="vistaFuentesXIndicador.php">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"><?= $accion == 'consultar' ? 'Modificar' : 'Nuevo' ?> Fuente</h5>
+          <h5 class="modal-title"><?= $accion == 'consultar' ? 'Modificar' : 'Nuevo' ?> Fuente por indicador</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <div class="form-group">
-            <label>Id</label>
-            <input type="number" name="id" class="form-control" value="<?= $id ?>" <?= $accion == 'consultar' ? 'readonly' : '' ?> required>
+            <label>Id Fuente</label>
+            <input type="number" name="fkidfuente" class="form-control" value="<?= $fkidfuente ?>" required>
           </div>
           <div class="form-group">
-            <label>Nombre Fuente</label>
-            <input type="text" name="nombre" class="form-control" value="<?= $nombre ?>" required>
+            <label>Id Indicador</label>
+            <input type="number" name="fkidindicador" class="form-control" value="<?= $fkidindicador ?>" <?= $accion == 'consultar' ? 'readonly' : '' ?> required>
           </div>
+          
+          
         </div>
         <div class="modal-footer">
           <?php if ($accion == 'consultar'): ?>

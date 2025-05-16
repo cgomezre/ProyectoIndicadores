@@ -5,7 +5,7 @@ ob_start();
 	include '../controlador/configBd.php';
 	include '../controlador/ControlEntidad.php';
 	include '../controlador/ControlConexionPdo.php';
-  include '../modelo/Entidad.php';
+	include '../modelo/Entidad.php';
 
   	session_start();
   	if($_SESSION['email']==null)header('Location: ../index.php');
@@ -21,13 +21,16 @@ ob_start();
 
 
 // Configurar nombre de la tabla y clave primaria
-$tabla = 'fuente';
+$tabla = 'resultadoindicador';
 $clave = 'id';
+
 
 // Inicializar valores
 $accion = $_POST['accion'] ?? '';
 $id = $_POST['id'] ?? '';
-$nombre = $_POST['nombre'] ?? '';
+$resultado = $_POST['resultado'] ?? '';
+$fechacalculo = $_POST['fechacalculo'] ?? '';
+$fkidindicador = $_POST['fkidindicador'] ?? '';
 
 $control = new ControlEntidad($tabla);
 
@@ -47,7 +50,7 @@ if ($accion) {
       $obj = $control->buscarPorId($clave, $id);
       if ($obj) {
           $id = $obj->__get('id');
-          $nombre = $obj->__get('nombre');
+         // $nombre = $obj->__get('nombre');
       }
   }
 }
@@ -68,10 +71,10 @@ $arreglo = $control->listar();
   <div class="table-wrapper">
     <div class="table-title">
       <div class="row">
-        <div class="col-sm-8" style="color:black"><h2>Fuente</h2></div>
+        <div class="col-sm-8" style="color:black"><h2>ResulIndicador</h2></div>
         <div class="col-sm-4 text-right">
             <button class="btn btn-primary" data-toggle="modal" data-target="#modalAgregar">
-            <i class="fa fa-plus"></i> Nueva Fuente</button>
+            <i class="fa fa-plus"></i> Nuevo ResulIndicador</button>
         </div>
       </div>
     </div>
@@ -79,7 +82,9 @@ $arreglo = $control->listar();
       <thead class="thead-light">
         <tr>
           <th>Id</th>
-          <th>Nombre Fuente</th>
+          <th>Resultado</th>
+          <th>Fecha Calculo</th>
+          <th>IdIndicador</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -87,9 +92,11 @@ $arreglo = $control->listar();
        <?php foreach ($arreglo as $obj): ?>
         <tr>
           <td><?= $obj->__get('id') ?></td>
-          <td><?= $obj->__get('nombre') ?></td>
+          <td><?= $obj->__get('resultado') ?></td>
+          <td><?= $obj->__get('fechacalculo') ?></td>
+          <td><?= $obj->__get('fkidindicador') ?></td>
           <td>
-            <form method="post" action="vistaFuente.php" style="display:inline;">
+            <form method="post" action="vistaResulIndicador.php" style="display:inline;">
               <input type="hidden" name="id" value="<?= $obj->__get('id') ?>">
               <input type="hidden" name="accion" value="consultar">
               <button type="submit" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></button>
@@ -110,10 +117,10 @@ $arreglo = $control->listar();
 <!-- Modal: Agregar -->
 <div class="modal fade" id="modalAgregar" tabindex="-1" role="dialog" aria-labelledby="modalAgregarLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form method="POST" action="vistaFuente.php">
+    <form method="POST" action="vistaResulIndicador.php">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"><?= $accion == 'consultar' ? 'Modificar' : 'Nuevo' ?> Fuente</h5>
+          <h5 class="modal-title"><?= $accion == 'consultar' ? 'Modificar' : 'Nuevo' ?> ResulIndicador</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -124,8 +131,16 @@ $arreglo = $control->listar();
             <input type="number" name="id" class="form-control" value="<?= $id ?>" <?= $accion == 'consultar' ? 'readonly' : '' ?> required>
           </div>
           <div class="form-group">
-            <label>Nombre Fuente</label>
-            <input type="text" name="nombre" class="form-control" value="<?= $nombre ?>" required>
+            <label>Resultado</label>
+            <input type="text" name="resultado" class="form-control" value="<?= $resultado ?>" required>
+          </div>
+          <div class="form-group">
+            <label>Fecha Calculo</label>
+            <input type="datetime-local" name="fechacalculo" class="form-control" value="<?= $fechacalculo ?>" required>
+          </div>
+          <div class="form-group">
+            <label>IdIndicador</label>
+            <input type="text" name="fkidindicador" class="form-control" value="<?= $fkidindicador ?>" required>
           </div>
         </div>
         <div class="modal-footer">
